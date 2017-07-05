@@ -25,7 +25,7 @@ wxGPGPSport is written in python 2.x (not compatible with python 3.x) using the 
   - Download maps from a variety of user defined tile servers
   - Nice graphical display of GPS track parameters
   - An easy system of plugins intended to extend its capabilities
-  - A powefull python scripting system to manipulate and automate your GPS tracks analysis
+  - A powefull python scripting system to manipulate and automate your GPS tracks analysis, import and export tracks through GPSBabel, ...
 
 
 ## How do I install It? ##
@@ -37,11 +37,11 @@ Please refer to the file Readme.md inside the docs folder of the archive. Basica
   - matplotlib
   - numpy
   - python-dateutils
-  
-In Python folder, you'll find all the files required to install a python-2.7 environment on your windows machine, as well as an installation script ('install_requirements.bat').  
+### Setup a python environment ###
+If you need to setup a python environment, under the "releases tag", you should find an archive named PythonDependancies.zip, which contains all the files required to install a python-2.7 environment (windows machine), as well as an installation script ('install_requirements.bat').  
 Once python and dependancies are installed, just download, extract, and double_click launch_xxx
   
   ### Installing binaries ###
-  wxgpgpsport is now compatible with pyinstaller. Windows and macOSX binaries are available. Just download the files, unzip and double click wxgpgpsport.exe (or wxgpgpsport on OSX)
+  wxgpgpsport is now compatible with pyinstaller. Windows and macOSX binaries are available. Just download the files under the release tag, unzip and double click wxgpgpsport.exe (or wxgpgpsport on OSX)
   
 
