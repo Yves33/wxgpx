@@ -85,8 +85,18 @@ def Haversine(lat1,lon1,lat2,lon2):
     dlon = math.radians(lon2-lon1)
     radius = 6378137    #meters
     a = math.sin(dlat/2) * math.sin(dlat/2) + math.cos(math.radians(lat1))* math.cos(math.radians(lat2))*math.sin(dlon/2)*math.sin(dlon/2)
-    return radius*2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
-
+    dist = radius*2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    #calculate course
+    dlon=lon2-lon1
+    x = math.sin(dlon) * math.cos(lat2)
+    y = math.cos(lat1) * math.sin(lat2) - (math.sin(lat1)
+            * math.cos(lat2) * math.cos(dlon))
+    course=(math.degrees(math.atan2(x,y))+360)%360
+    return (dist,course)
+    
+def Course(alt1,lon1,lat2,lon2):
+    return 0;
+    
 def LatLonToMeters(lat, lon ):
     mx = lon * (math.pi*6378137) / 180.0
     my = math.log( math.tan((90 + lat) * math.pi / 360.0 )) / (math.pi / 180.0)
@@ -316,9 +326,9 @@ class WxGLArtist(glcanvas.GLCanvas):
         glVertexPointer (2, GL_FLOAT, 0, ctypes.c_void_p(0*4))                           #size,type,stride,pointer to first vertex
         glLineWidth(self.pensize)
         glColor4f(*self.pencolor)
-        glDrawArrays (GL_LINES, 0, 2)
+        glDrawArrays (GL_LINES, 0, len(vertices))
         glDeleteBuffers(1, GLuint(vbo))
-
+        
     def RGBALines(self,vertices):
         #we suppose taht vertices is an array [x,y,r,g,b,a,...]
         glEnable(GL_BLEND)
@@ -593,8 +603,8 @@ class WxDCArtist(wx.Panel):
     def Lines(self,vertices):
         dc=wx.GCDC(wx.MemoryDC(self._curbuffer))
         self._preparedc(dc)
-        for i in range(0,len(vertices)-3):
-            dc.DrawLine(vertices[i],vertices[i+1],vertices[i+2],vertices[i+3])
+        for i in range(0,len(vertices)/4):
+            dc.DrawLine(vertices[4*i],vertices[4*i+1],vertices[4*i+2],vertices[4*i+3])
 
     def RGBALines(self,vertices):
         dc=wx.GCDC(wx.MemoryDC(self._curbuffer))
@@ -1264,7 +1274,7 @@ class WxPathLayer(WxMapLayer):
                 lon1=self.path[i-1][1]
                 lat2=self.path[i][0]
                 lon2=self.path[i][1]
-                length+=Haversine(lat1,lon1,lat2,lon2)
+                length+=Haversine(lat1,lon1,lat2,lon2)[0]
         return length
 
     def AppendPoint(lat,lon):

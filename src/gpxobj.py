@@ -100,7 +100,7 @@ class GpxObj:
         else:
         ## the same filtering out unwanted columns (starting with underscore: private data for plugins)
             exportedkeys=[k for k in self.unit.keys() if not k.startswith('_')]
-            keys = np.array([k for k in exportedkeys])
+            keys = np.array([k for k in exportedkeys if not k.startswith('idx')])
             unit = np.array([self.unit[k] for k in exportedkeys])
             scale = np.array([self.scale[k] for k in exportedkeys])
             d =self.d[[k for k in exportedkeys+['ok']]]
@@ -197,6 +197,7 @@ class GpxObj:
 
     def drop_row(self,rownum):
         self.d=np.delete(self.d, (rownum), axis=0)
+        self['idx']=np.arange(self.get_row_count())
 
     def get_last_row_idx(self):
         return (self.get_row_count()-1)

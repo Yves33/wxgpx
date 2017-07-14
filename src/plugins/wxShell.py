@@ -37,11 +37,12 @@ class WxShell(wx.Panel):
         self.runbutton=wx.Button(self,0,"Run the script file below...")
         self.runbutton.Bind(wx.EVT_BUTTON, self.OnRunButtonClicked)
         sizer.Add(self.runbutton,0,wx.EXPAND)
-        if not getattr(sys,"frozen",False):
-            self.scriptpath=os.path.dirname(os.path.abspath(__file__))+os.sep+".."+os.sep+"scripts/"
-        else:
-            self.scriptpath=os.path.dirname(sys.executable)+os.sep+"scripts/"
-        scriptlist=sorted(os.listdir(self.scriptpath))
+        #if not getattr(sys,"frozen",False):
+        #    self.scriptpath=os.path.dirname(os.path.abspath(__file__))+os.sep+".."+os.sep+"scripts/"
+        #else:
+        #    self.scriptpath=os.path.dirname(sys.executable)+os.sep+"scripts/"
+        #scriptlist=sorted(os.listdir(self.scriptpath))
+        scriptlist=self.scanscripts()
         self.lastscripts=['Browse file...']
         scriptlist.append(self.lastscripts[0])
         self.scriptcombo=wx.ComboBox(self,choices=scriptlist, style=wx.CB_READONLY)
@@ -75,6 +76,15 @@ class WxShell(wx.Panel):
         if os.path.isfile(startupfile):
             self.run(startupfile)
 
+    def scanscripts(self):
+        if not getattr(sys,"frozen",False):
+             self.scriptpath=os.path.dirname(os.path.abspath(__file__))+os.sep+".."+os.sep+"scripts/"
+        else:
+            self.scriptpath=os.path.dirname(sys.executable)+os.sep+"scripts/"
+        fulllist=sorted(os.listdir(self.scriptpath))
+        return[f for f in fulllist if not (f.startswith('__') or f.endswith('pyc') or f.startswith('lib'))]
+
+
     def Link(self):
 
         if self.gpx!=None:
@@ -92,7 +102,8 @@ class WxShell(wx.Panel):
 
     def UpdateScripts(self,event):
         self.scriptcombo.Clear()
-        scriptlist=sorted(os.listdir(self.scriptpath))
+        scriptlist=self.scanscripts()
+        #scriptlist=sorted(os.listdir(self.scriptpath))
         scriptlist=scriptlist+self.lastscripts
         for s in scriptlist:
             self.scriptcombo.Append(s)
@@ -117,7 +128,7 @@ class WxShell(wx.Panel):
             self.pyshell.run("execfile('{}')".format(filename))
             if filename not in self.lastscripts and os.path.normpath(self.scriptpath) not in os.path.normpath(filename) :
                 self.lastscripts.insert(0,filename)
-                    
+
     def copy(self,string):
         if not wx.TheClipboard.IsOpened():
             clipdata = wx.TextDataObject()

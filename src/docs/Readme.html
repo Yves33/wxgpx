@@ -553,6 +553,8 @@ gpx.drop_column(<span class="hljs-string">'acceleration'</span>)</code></pre>
 <ul>
 <li><p>You can write all your instructions in a script then run the script using &#x201c;run script&#x2026;&#x201d; button in shell plugin.</p></li>
 <li><p>Any file in the scripts folder named Startup.py will be executed immediately after program starts.</p></li>
+<li><p>In order to import functions from other scripts, you have to keep the file <code>__init__.py</code> in the scripts folder.</p></li>
+<li><p>Any script file starting with &#x201c;lib&#x201d; will be excluded from script list.</p></li>
 <li><p>the script module gives you access to the following objects/commands:</p></li>
 </ul>
 
@@ -686,6 +688,8 @@ Uses GPSBabel to directly export to foreign file format. Be aware thta not all f
 GPSBabel must be installed on your system. <br>
 If you convert to kml, you have the option to open the file in google earth immediately. <br>
 You may need to edit the script to correct the location of gpsbabel (and google earth) programs.  </p></li>
+<li><p>Test_overlay and liboverlay <br>
+Shows you how to create an overlay layer on the map and draw directly to overlay. This is a deno script.</p></li>
 </ul>
 
 
@@ -743,6 +747,6 @@ In order to get the plugins to work, the following extra modules are imported by
 <span class="hljs-keyword">import</span> wx.lib.agw.speedmeter <span class="hljs-keyword">as</span> sm
 <span class="hljs-keyword">import</span> wx.html2
 <span class="hljs-keyword">from</span> wx.py <span class="hljs-keyword">import</span> shell
-<span class="hljs-keyword">import</span>  wx.grid <span class="hljs-keyword">as</span>  wxgrid</code></pre>
+<span class="hljs-keyword">import</span> wx.grid <span class="hljs-keyword">as</span>  wxgrid</code></pre>
 
-<p>If you want to develop plugins that need to import extra python modules, you&#x2019;ll have to install a full python environment (in any case, installing a full environnement is better to develop plugins and scripts.</p>
+<p>If you want to develop plugins that need to import extra python modules, you&#x2019;ll have to install a full python environment (in any case, installing a full environnement is better to develop plugins and scriots.</p>

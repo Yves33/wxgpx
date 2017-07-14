@@ -19,7 +19,7 @@ else:
     from pubsub import pub
 
 from wxquery.wxquery import WxQuery
-from wxmappanel.wxmappanel import WxMapBase,WxMapLayer,WxToolLayer,WxMapButton,WxMapImage
+from wxmappanel.wxmappanel import WxMapBase,WxMapLayer,WxToolLayer,WxMapButton,WxMapImage,MetersToPixels,PixelsToMeters
 import gpxobj
 
 
@@ -65,8 +65,8 @@ def FloatToRGB(f):
     elif cmap==3:
         a=(1-f)
         Y=math.floor(255*a)
-        return(255,Y,0)  
-    
+        return(255,Y,0)
+
 class GpxMapLayer(WxMapLayer):
     def __init__(self, *args, **kwargs):
         WxMapLayer.__init__(self, *args, **kwargs)
@@ -87,10 +87,10 @@ class GpxMapLayer(WxMapLayer):
         pub.subscribe(self.OnSigCurChanged, "CurChanged")
         pub.subscribe(self.OnSigSelChanged, "SelChanged")
         pub.subscribe(self.OnSigValChanged, "ValChanged")
-        
+
     def AttachGpx(self,data):
         self.gpx=data
-        self._gpx=np.ones(data.get_row_count(),dtype={'names':['_x','_y','_r','_g','_b','_d'],'formats':['int','int','int','int','int','float']})
+        self._gpx=np.ones(self.gpx.get_row_count(),dtype={'names':['_x','_y','_r','_g','_b','_d'],'formats':['int','int','int','int','int','float']})
         if self.gpx.has_field('speed'):
             self.BuildColorTable(self.trackcolorkey)
         else:
@@ -100,11 +100,11 @@ class GpxMapLayer(WxMapLayer):
         self.parent.EncloseGeoBbox(self.gpx.d['lat'].min(),self.gpx.d['lon'].min(),self.gpx.d['lat'].max(),self.gpx.d['lon'].max())
         self.parent.Draw()
         self.parent.Refresh()
-    
+
     def DetachGpx(self):
         self.gpx=None
         self._gpx=None
-        
+
     def DrawOffscreen(self,dc):
         if self.gpx==None:
             return
@@ -115,7 +115,7 @@ class GpxMapLayer(WxMapLayer):
         pen=self.parent.renderer
         pen.SetLineWidth(self.linewidth)
         pen.RGBALines(self.bufferdata)
-            
+
     def DrawOnscreen(self,dc):
         if self.currentindic=='Dot':
             self.DrawDot(dc)
@@ -125,7 +125,7 @@ class GpxMapLayer(WxMapLayer):
             self.DrawVector(dc,False)
         if self.currentindic=='Vector to':
             self.DrawVector(dc,True)
-    
+
     def DrawDot(self,dc):
         pen=self.parent.renderer
         pen.SetLineWidth(1)
@@ -133,7 +133,7 @@ class GpxMapLayer(WxMapLayer):
         pen.SetBrushColor(*self.currentcolor)
         if self.gpx!=None:
             pen.Circle(self.current_x, self.current_y,5)
-        
+
     def DrawArrowhead(self,dc):
         pen=self.parent.renderer
         pen.SetLineWidth(1)
@@ -147,7 +147,7 @@ class GpxMapLayer(WxMapLayer):
             sinf=math.sin(deg)
             rt=lambda x,y:[x*cosf-y*sinf+self.current_x,y*cosf+x*sinf+self.current_y]
             pen.Polygon(rt(0,-12*sf)+rt(-4*sf,0*sf)+rt(4*sf,0*sf))
-        
+
     def DrawVector(self,dc,back=False):
         pen=self.parent.renderer
         pen.SetLineWidth(1)
@@ -171,7 +171,7 @@ class GpxMapLayer(WxMapLayer):
                 pen.Polygon(rt(0,(0*sf))+\
                         rt(-4*sf,(12*sf))+\
                         rt(4*sf,(12*sf)))
-        
+
     def OnMouseMotion(self,event):
         #if not self.active:
         #    return False
@@ -189,7 +189,7 @@ class GpxMapLayer(WxMapLayer):
                 self.parent.Draw(False)
                 self.parent.Refresh()
                 return False                # let other layer process this event
-    
+
     def BuildColorTable(self,meas):
         if meas not in self.gpx.get_header_names():
             #build palette from provided color
@@ -199,7 +199,7 @@ class GpxMapLayer(WxMapLayer):
             return
         cmin=self.gpx[meas].min()
         crange=self.gpx[meas].max()-cmin
-        ## wxPython /matplotlib version 
+        ## wxPython /matplotlib version
         #import matplotlib.cm as cm
         #import matplotlib.pyplot as plt
         #palette = plt.get_cmap('jet')
@@ -214,7 +214,7 @@ class GpxMapLayer(WxMapLayer):
             self._gpx['_r'][idx]= FloatToRGB(value)[0]
             self._gpx['_g'][idx]= FloatToRGB(value)[1]
             self._gpx['_b'][idx]= FloatToRGB(value)[2]
-            
+
     def NPLatLonToScreen(self):
         if self.gpx==None:
             return
@@ -228,10 +228,10 @@ class GpxMapLayer(WxMapLayer):
         self._gpx['_y'] = np.log(np.tan((self.gpx['lat']+90.0)*math.pi/360.0)) / (math.pi/180.0) *( oshift / 180 )
         self._gpx['_x'] = self.gpx['lon'] * oshift / 180.0
         self._gpx['_x']=(self._gpx['_x']+oshift)/res
-        self._gpx['_y']=(self._gpx['_y']+oshift)/res       
+        self._gpx['_y']=(self._gpx['_y']+oshift)/res
         self._gpx['_x']=self._gpx['_x']-left
         self._gpx['_y']=((2 ** zoom) * 256)-self._gpx['_y']-top
-        
+
     def OnLeftMouseDblClick(self,event):
         if not self.active:
             return False
@@ -257,11 +257,11 @@ class GpxMapLayer(WxMapLayer):
             self.BuildColorTable(self.trackcolorkey)
             self.parent.Draw()
             return True
-        
+
     def OnSigSelChanged(self,arg1,arg2,arg3):
         if arg1==self.id:
             return
-        
+
     def OnSigValChanged(self,arg1):
         if arg1==self.id:
             return
@@ -269,17 +269,17 @@ class GpxMapLayer(WxMapLayer):
         self.parent.Refresh()
         self.parent.Draw()
         self.parent.Refresh()
-    
+
     def OnSigCurChanged(self, arg1, arg2):
         if arg1==self.id:
-            return 
+            return
         if self.gpx!=None:
             self.current=arg2
             self.current_x=self._gpx['_x'][arg2]
             self.current_y=self._gpx['_y'][arg2]
             self.parent.Draw(False)
             self.parent.Refresh()
-            
+
 panz64='''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'''
 
 class WxMapWidget(WxMapBase):
@@ -290,7 +290,7 @@ class WxMapWidget(WxMapBase):
         self.GetNamedLayer("Gpx tools").AppendTool(WxMapButton("PanZoom",WxMapImage.FromBase64(panz64),None))
         self.GetNamedLayer("Gpx tools").SelectTool("PanZoom")
         self.AppendLayer(GpxMapLayer(self))
-        
+
     def AttachGpx(self,data):
         for layer in self.layers:
             #some layers may not be gpx aware. scalelayer,toollayer, ...
@@ -298,7 +298,7 @@ class WxMapWidget(WxMapBase):
                 layer.AttachGpx(data)
             except:
                 pass
-                
+
     def DetachGpx(self):
         for layer in self.layers:
             #some layers may not be gpx aware. scalelayer,toollayer, ...
@@ -307,7 +307,7 @@ class WxMapWidget(WxMapBase):
             except:
                 pass
         pass
-    
+
     def OnRightMouseDown(self,event):
         for layer in self.layers:
             if layer.OnRightMouseDown(event):
@@ -318,7 +318,7 @@ class WxMapWidget(WxMapBase):
                 item = self.map_src_menu.Append(-1, text)
                 self.Bind(wx.EVT_MENU, self.OnPopup, item)
         self.PopupMenu(self.map_src_menu)
-        
+
     # def OnRightMouseDown(self,event):
         # for layer in self.layers:
             # layer.OnRightMouseDown(event)
@@ -331,8 +331,8 @@ class WxMapWidget(WxMapBase):
             # for text in self.ListMapSrc():
                 # item = self.map_src_menu.Append(-1, text)
                 # self.Bind(wx.EVT_MENU, self.OnPopup, item)
-        # self.PopupMenu(self.map_popup)         
-    
+        # self.PopupMenu(self.map_popup)
+
     def OnPopup(self, event):
         item = self.map_src_menu.FindItemById(event.GetId())
         text = item.GetText()

@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['wxgpgpsport.py'],
-             pathex=['.\\modules\\', '.\\plugins\\', 'D:\\wxgpxf\\wxgpx'],
+             pathex=['./modules/', './plugins/', '/Volumes/USB2G_LN/wxgpx/src'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -23,7 +23,7 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
-          console=True )
+          console=False , icon='images/Map.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -31,3 +31,7 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                name='wxgpgpsport')
+app = BUNDLE(coll,
+             name='wxgpgpsport.app',
+             icon='./images/Map.ico',
+             bundle_identifier=None)

@@ -388,6 +388,10 @@ gpx.drop_column('acceleration')
 
 * Any file in the scripts folder named Startup.py will be executed immediately after program starts.
 
+* In order to import functions from other scripts, you have to keep the file `__init__.py` in the scripts folder.
+
+* Any script file starting with "lib" will be excluded from script list.
+
 * the script module gives you access to the following objects/commands:
 ```python
 gpx         # the array holding all values, with associated methods.
@@ -507,6 +511,9 @@ Uses GPSBabel to directly export to foreign file format. Be aware thta not all f
 GPSBabel must be installed on your system.
 If you convert to kml, you have the option to open the file in google earth immediately.
 You may need to edit the script to correct the location of gpsbabel (and google earth) programs.  
+
+- Test_overlay and liboverlay
+Shows you how to create an overlay layer on the map and draw directly to overlay. This is a deno script.
 
  5. ABOUT THIS DOCUMENT
 =======================

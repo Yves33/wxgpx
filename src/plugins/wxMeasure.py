@@ -17,7 +17,7 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir)
 import gpxobj
-from wxmappanel.wxmappanel import WxMapBase,WxMapLayer,WxPathLayer,WxToolLayer,WxMapButton,WxMapImage,PixelsToLatLon,Haversine
+from wxmappanel.wxmappanel import WxMapBase,WxMapLayer,WxPathLayer,WxToolLayer,WxMapButton,WxMapImage,PixelsToLatLon, Haversine
 try:
     from OpenGL.GL import *
     from OpenGL.GLU import *
@@ -48,6 +48,22 @@ class wxMeasureMapLayer(WxPathLayer):
         self.panel.widthlabel.SetLabel("Map width:   "+myformat(width*self.parent.pixelscale))
         self.panel.heightlabel.SetLabel("Map height:   "+myformat(height*self.parent.pixelscale))
         self.panel.osdlabel.SetLabel("Current path: "+myformat(self.GetPathLength()))
+        if len(self.path)>1:
+            info=''
+            info+="As the crow flies:"
+            info+="\nDistance: "+myformat(Haversine(self.path[0][0],self.path[0][1],
+                                                    self.path[-1][0],self.path[-1][1])[0])
+            info+="\nCourse: "+myformat(Haversine(self.path[0][0],self.path[0][1],
+                                                    self.path[-1][0],self.path[-1][1])[1])
+            info+='\n--------------'
+            info+='\nIndividual segments'
+            for idx in range(0,len(self.path)-1):
+                info+="\nDistance: "+myformat(Haversine(self.path[idx][0],self.path[idx][1],
+                                                    self.path[idx+1][0],self.path[idx+1][1])[0])
+                info+="\tCourse: "+myformat(Haversine(self.path[idx][0],self.path[idx][1],
+                                                    self.path[idx+1][0],self.path[idx+1][1])[1])
+            self.panel.text.Clear()
+            self.panel.text.AppendText(info)
     
     def OnLeftMouseDblClick(self, event):
         for l in self.parent.layers:
@@ -67,9 +83,13 @@ class WxMeasure(wx.Panel):
         self.widthlabel=wx.StaticText(self,wx.NewId(),"Map width:")
         self.heightlabel=wx.StaticText(self,wx.NewId(),"Map height:")
         self.osdlabel=wx.StaticText(self,wx.NewId(),"Current path: empty")
+        self.moreinfolabel=wx.StaticText(self,wx.NewId(),"More informations:")
         sizer.Add(self.widthlabel,0,wx.TOP)
         sizer.Add(self.heightlabel,0,wx.TOP)
         sizer.Add(self.osdlabel,0,wx.TOP)
+        sizer.Add(self.moreinfolabel,0,wx.TOP)
+        self.text=wx.TextCtrl(self, style=wx.TE_MULTILINE|wx.TE_RICH2,size=(-1, 1200))
+        sizer.Add(self.text,0,wx.TOP|wx.EXPAND)
         self.measurelayer=wxMeasureMapLayer(self.mapwidget)
         self.mapwidget.AppendLayer(self.measurelayer)
         self.measurelayer.RegisterPanel(self)
@@ -106,7 +126,7 @@ class WxMeasure(wx.Panel):
     def OnRightMouseDown(self,event):return False
     def OnMouseWheel(self,event):pass
     def OnPaint(self,event):pass
-    def OnSize(self,event):pass  
+    def OnSize(self,event):pass
     def OnErase(self,event):pass
        
 class Plugin(WxMeasure):

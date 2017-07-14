@@ -33,7 +33,7 @@ def thispath():
 
 #
 #
-#    
+#
 def test_gpx():
     if (len(sys.argv)<1):
         print "You have to supply one file to open (*.gpx or *.fit)"
@@ -124,7 +124,7 @@ def test_wxquery():
 
 #
 #
-#        
+#
 def test_mappanel():
     class SampleMapLayer(WxMapLayer):
         def __init__(self,parent,name="Sample layer"):
@@ -216,25 +216,25 @@ def test_mappanel():
 
 #
 #
-#    
+#
 def test_mapwidget():
     class TestFrame(wx.Frame):
         def __init__(self, parent, id, title, size=(500, 500)):
             wx.Frame.__init__(self, parent,id,size=(500,500),title=title,style=wx.DEFAULT_FRAME_STYLE)
             self.Bind(wx.EVT_CLOSE, self.OnCloseFrame)
-            
+
             Bordeaux=(44.8404400,-0.5805000)
             LaRochelle=(46.167,-1.167)
-            
+
             panel = wx.Panel(self, -1)                  # each frame needs a top level panel
-            self.window = wxmapwidget.WxMapWidget(panel,usegl=True) # our WxMapWidget
+            self.window = wxmapwidget.WxMapWidget(panel,usegl=False) # our WxMapWidget
             hbox = wx.BoxSizer(wx.VERTICAL)             # a box
             hbox.Add(self.window, 1, wx.ALIGN_CENTER|wx.ALL|wx.EXPAND, 0)
             panel.SetSizer(hbox)
             #self.window.LoadProviders(os.path.dirname(os.path.abspath(__file__))+os.sep+"providers.txt")
             self.window.SetMapSrc("Open street maps")
             self.Show()
-            self.window.SetSize(self.GetClientSize())   #can't get the map to show unless we force a resize    
+            self.window.SetSize(self.GetClientSize())   #can't get the map to show unless we force a resize
             #self.window.SetGeoZoomAndCenter(20,(Bordeaux))
             self.window.EncloseGeoBbox(min(Bordeaux[0],LaRochelle[0]),\
                                         min(Bordeaux[1],LaRochelle[1]),\
@@ -255,29 +255,30 @@ def test_mapwidget():
             self.gpx.append_column('duration','float')
             self.gpx.set_unit('duration','min');
             self.gpx['duration']=np.cumsum(self.gpx.duration())
-            self.gpx.append_column('course','float') 
+            self.gpx.append_column('course','float')
             self.gpx['course']=self.gpx.hv_course()
             self.gpx.append_column('hv_speed',float)
             self.gpx['hv_speed']=self.gpx.hv_speed()
-            
+
             self.window.AttachGpx(self.gpx)
             self.window.EncloseGeoBbox(self.gpx.d['lat'].min(),\
                                 self.gpx.d['lon'].min(),\
                                 self.gpx.d['lat'].max(),\
                                 self.gpx.d['lon'].max())
-            
+            self.window.Draw(True)
+
         def OnCloseFrame(self, evt):
             exit()
-                
+
         def OnQuit(self,event):
             self.Close(True)
-        
+
     class DemoApp(wx.App):
         def OnInit(self):
             frame = TestFrame(None,-1,"Demo App")
             self.SetTopWindow(frame)
             return True
-            
+
     app = DemoApp(0)
     app.MainLoop()
 
@@ -286,7 +287,7 @@ def test_mapwidget():
 #
 def test_timewidget():
     from wx.py import shell
-    
+
     class TestFrame(wx.Frame):
         def __init__(self, parent=None):
             wx.Frame.__init__(self, parent,size = (500,250),title="TimeWidget Test",style=wx.DEFAULT_FRAME_STYLE)
@@ -296,7 +297,7 @@ def test_timewidget():
             hbox.Add(self.window, 2, wx.EXPAND | wx.ALL)
             panel.SetSizer(hbox)
             self.Show()
-            
+
             self.gpx=gpxobj.GpxObj()
             if (len(sys.argv)<1):
                 print "You have to supply one file to open (*.gpx or *.fit)"
@@ -316,25 +317,25 @@ def test_timewidget():
             self.gpx.append_column('duration','float')
             self.gpx.set_unit('duration','min');
             self.gpx['duration']=np.cumsum(self.gpx.duration())
-            self.gpx.append_column('bear','float') 
+            self.gpx.append_column('bear','float')
             self.gpx['bear']=self.gpx.hv_course()
             self.gpx.append_column('hv_speed',float)
             self.gpx['hv_speed']=self.gpx.hv_speed()
             self.gpx.append_column('hv_vel',float)
             self.gpx['hv_vel']=self.gpx.hv_pace(500)
-            
+
             self.window.AttachGpx(self.gpx)
             self.Refresh()
-            
+
         def OnQuit(self,event):
             self.Close(True)
-        
+
     class DemoApp(wx.App):
         def OnInit(self):
             frame = TestFrame()
             self.SetTopWindow(frame)
             return True
-    
+
     app = DemoApp(0)
     app.MainLoop()
 
@@ -350,8 +351,8 @@ def test_timewidget():
 #
 
 #test_timewidget()
-#test_mapwidget()    
+#test_mapwidget()
 #test_mappanel()
-test_wxquery()      
+#test_wxquery()
 #test_gpx()
 print "Edit this file and choose which test to start"
