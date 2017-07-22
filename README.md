@@ -42,8 +42,8 @@ If you need to setup a python environment, under the "releases tag", you should 
 Once python and dependancies are installed, just download, extract, and double_click launch_xxx
   
   ### Installing binaries ###
-  wxgpgpsport is now compatible with pyinstaller. Windows and macOSX binaries are available. Just download the files under the release tag, unzip and double click wxgpgpsport.exe (or wxgpgpsport on OSX)
-https://github.com/Yves33/wxgpx/releases/download/2017-07-14/wxgpgpsport-latest-osx.zip
-https://github.com/Yves33/wxgpx/releases/download/2017-07-14/wxgpgpsport-latest-win32.zip
+  wxgpgpsport is now compatible with pyinstaller. Windows and macOSX binaries are available. Just download the files under the release tag, unzip and double click wxgpgpsport.exe (or wxgpgpsport on OSX).  
+https://github.com/Yves33/wxgpx/releases/download/2017-07-14/wxgpgpsport-latest-osx.zip  
+https://github.com/Yves33/wxgpx/releases/download/2017-07-14/wxgpgpsport-latest-win32.zip  
   
 
