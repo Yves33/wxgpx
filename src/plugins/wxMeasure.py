@@ -53,15 +53,15 @@ class wxMeasureMapLayer(WxPathLayer):
             info+="As the crow flies:"
             info+="\nDistance: "+myformat(Haversine(self.path[0][0],self.path[0][1],
                                                     self.path[-1][0],self.path[-1][1])[0])
-            info+="\nCourse: "+myformat(Haversine(self.path[0][0],self.path[0][1],
-                                                    self.path[-1][0],self.path[-1][1])[1])
+            info+="\nCourse: "+ str(Haversine(self.path[0][0],self.path[0][1],
+                                         self.path[-1][0],self.path[-1][1])[1]) + " deg"
             info+='\n--------------'
             info+='\nIndividual segments'
             for idx in range(0,len(self.path)-1):
                 info+="\nDistance: "+myformat(Haversine(self.path[idx][0],self.path[idx][1],
                                                     self.path[idx+1][0],self.path[idx+1][1])[0])
-                info+="\tCourse: "+myformat(Haversine(self.path[idx][0],self.path[idx][1],
-                                                    self.path[idx+1][0],self.path[idx+1][1])[1])
+                info+="\tCourse: "+str(Haversine(self.path[idx][0],self.path[idx][1],
+                                             self.path[idx+1][0],self.path[idx+1][1])[1]) + " deg"
             self.panel.text.Clear()
             self.panel.text.AppendText(info)
     

@@ -297,6 +297,7 @@ if __name__ == "__main__":
             self.gpxmenu.Enable(self.gpxmenu.FindItem("Replay"),True)
             for k in self.plugins:
                 self.plugins[k].AttachGpx(self.gpx)
+            self.SetTitle(filename)
             self.__resize()
 
         def OnUnitsMenu(self,event):
@@ -379,6 +380,7 @@ if __name__ == "__main__":
             return True
 
         def FilterEvent(self,event):
+
             # trap mouse motion event when in replay mode
             if (event.GetEventType()==wx.wxEVT_MOTION) and self.blockmousemotion==True:
                 return True

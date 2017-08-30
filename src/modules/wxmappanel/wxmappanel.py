@@ -44,8 +44,10 @@ try:
 except ImportError:
     hasGLUT = False
 
-DOWNLOAD_THREAD_NUM = 1
-QUEUE_WAIT = 0.05
+DOWNLOAD_THREAD_NUM = 3
+QUEUE_WAIT = 0.5
+#DOWNLOAD_THREAD_NUM = 1
+#QUEUE_WAIT = 0.05
 #map src format: ("friendly-name", "url/{x}/{y}/{z}/{q}","cache_dir")
 #{x}{y}{z}{q} will be replaced with computed values of zoom, longitude, latitude or quadkey
 # a list of possible urls can be found on https://leaflet-extras.github.io/leaflet-providers/preview/
@@ -129,7 +131,7 @@ def LatLonToPixels(lat,lon,zoom):
     x, y = MetersToPixels(mx, my, zoom)
     y = ((2 ** zoom) * 256) - y
     return x, y
-
+    
 #main classes
 
 class mozurllib(FancyURLopener):
@@ -412,7 +414,7 @@ class WxGLArtist(glcanvas.GLCanvas):
                    img.w/2,img.h/2,1., 1.,\
                    img.w/2,-img.h/2,1., 0.
                 ]
-        vbo = glGenBuffers (1)
+        vbo = glGenBuffers(1)
         glEnableClientState(GL_VERTEX_ARRAY)
         glDisableClientState (GL_COLOR_ARRAY)
         glEnableClientState(GL_TEXTURE_COORD_ARRAY)
@@ -520,7 +522,24 @@ class WxGLArtist(glcanvas.GLCanvas):
         else:
             glBindFramebuffer(GL_FRAMEBUFFER, 0)
         glPopAttrib()
-
+        
+    def SaveBuffer(self,buff,filename,imgtype=wx.BITMAP_TYPE_PNG):
+        # try:
+        #    from PIL import Image
+        #    glBindFramebuffer(GL_FRAMEBUFFER, buff[0])
+        #    glReadBuffer(GL_COLOR_ATTACHMENT0);
+        #    rgba=glReadPixels(0,0,self.width,self.height,GL_RGB,GL_UNSIGNED_BYTE)
+        #    image = Image.frombytes('RGBA', (self.width,self.height), rgba).transpose(Image.ROTATE_180).transpose(Image.FLIP_LEFT_RIGHT)
+        #    image.save (filename)
+        # except ImportError:
+        #    print "unimplemented: missing pillow module"
+        glBindFramebuffer(GL_FRAMEBUFFER, buff[0])
+        glReadBuffer(GL_COLOR_ATTACHMENT0)
+        rgb=glReadPixels(0,0,self.width,self.height,GL_RGB,GL_UNSIGNED_BYTE)
+        img= wx.EmptyImage(self.width,self.height)
+        img.SetData(rgb)
+        img.Mirror(False).SaveFile(filename, imgtype)
+        
     def ClearBuffer(self,buff=(0,0)):
         self.SetCurrent(self.context)
         glBindFramebuffer(GL_FRAMEBUFFER, buff[0])
@@ -689,7 +708,10 @@ class WxDCArtist(wx.Panel):
         dc=self._buff2dc(dstbuff)
         dc.SetClippingRegion(0,0,self.width,self.height)
         dc.DrawBitmap(srcbuff, 0, 0,False)
-
+        
+    def SaveBuffer(self,buff,filename,imgtype=wx.BITMAP_TYPE_PNG):
+        buff.SaveFile(filename,imgtype)
+        
     def ClearBuffer(self,buff=None):
         dc=self._buff2dc(buff)
         dc.SetBackground(wx.Brush(wx.Colour(0.0,0.0,0.0,0.0)))
@@ -1076,7 +1098,21 @@ class WxMapBase(wx.Panel):
 
     def OnErase(self,event):
         pass
-
+    
+    def CacheAll(self,maxzoom):
+        lat1,lon1=self.ScreenToGeo(0,0)
+        lat2,lon2=self.ScreenToGeo(self.width,self.height)
+        zoom=self.zoom
+        for z in range(self.zoom, maxzoom+1):
+            start_x, start_y = tuple(int(x/256) for x in LatLonToPixels(lat1,lon1,z))
+            stop_x, stop_y = tuple(int(x/256) for x in LatLonToPixels(lat2,lon2,z))
+            # obviously, caching entire area will generate lots of tiles - just print what would be downloaded
+            print "\nzoom level:", z,"tile count: ", stop_x-start_x, " X ", stop_y-start_y," (",(stop_x-start_x)*(stop_y-start_y), "tiles)"
+            print "x range:", start_x, stop_x, " -- y range:", start_y, stop_y
+            for x in range(start_x,stop_x+1):
+                for y in range(start_y, stop_y+1):
+                    print "downloading tile: {}/{}-{}-{}.png".format(self.GetCacheDir(),x,y,z)
+    
 class WxMapTile:
     def __init__(self, frame,x, y, zoom):
         self.tile = x, y, zoom
@@ -1085,15 +1121,20 @@ class WxMapTile:
 
     def DrawLocalTile(self, x_offset,y_offset):
         x, y, zoom = self.tile
-        self.frame.renderer.SetPenColor(0.0,0.0,0.0,1.0)
+        self.frame.renderer.SetPenColor(1.0,0.0,0.0,1.0)
         self.frame.renderer.SetLineWidth(1.0)
         if os.path.exists(self.filename):
             tile=WxMapImage.FromFile(self.frame.GetCacheDir() + "/" + str(x) + "-" + str(y) + "-" + str(zoom) + ".png")
             if tile.img.IsOk():
                 self.frame.renderer.Image(tile,x * 256-x_offset, y * 256-y_offset)
+                #self.frame.renderer.SetBrushColor(0.0,0.0,0.0,0.0)
+                #self.frame.renderer.Rect(x*256-x_offset,y*256-y_offset,x*256-x_offset+256,y*256-y_offset+256)
                 return True
-        self.frame.renderer.SetBrushColor(0.5,0.5,0.5,1.0)
-        self.frame.renderer.Rect(x*256-x_offset,y*256-y_offset ,256,256)
+        self.frame.renderer.SetBrushColor(0.8,0.8,0.8,1.0)
+        self.frame.renderer.SetPenColor(0.0,0.0,0.0,1.0)
+        self.frame.renderer.Rect(x*256-x_offset,y*256-y_offset,x*256-x_offset+256,y*256-y_offset+256)
+        self.frame.renderer.SetPenColor(0.0,0.0,0.0,1.0)
+        self.frame.renderer.SetBrushColor(0.0,0.0,0.0,1.0)
         self.frame.renderer.Text(str(x)+","+str(y), x*256-x_offset,y*256-y_offset)
         return False
 
@@ -1311,94 +1352,3 @@ class WxPathLayer(WxMapLayer):
                     self.parent.Draw(True)
                     self.parent.Refresh()
                     return True
-#main
-panz64='''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'''
-
-if __name__ == "__main__":
-    class SampleMapLayer(WxMapLayer):
-        def __init__(self,parent,name="Sample layer"):
-            WxMapLayer.__init__(self,parent,name)
-            self.current_x=0
-            self.current_y=0
-            #self.img=WxMapImage.FromFile(os.path.dirname(os.path.abspath(__file__))+os.sep+"up.png")
-            #self.img=WxMapImage.FromBase64(panz64)
-
-        def DrawOffscreen(self,dc):
-            width,height=self.parent.GetClientSize()
-            pen=self.parent.renderer
-            pen.SetLineWidth(3.0)
-            pen.SetPenColor(0.0,1.0,0.0,1.0)
-            pen.SetBrushColor(0.0,1.0,0.0,0.5)
-            pen.Circle(width/2, height/2,15)
-
-        def DrawOnscreen(self,dc):
-            pen=self.parent.renderer
-            pen.SetLineWidth(1.0)
-            pen.SetPenColor(1.0,0.0,1.0,1.0)
-            pen.SetBrushColor(1.0,0.0,1.0,1.0)
-            pen.SetFont('HELVETICA12')
-            lat,lon=self.parent.ScreenToGeo(self.current_x, self.current_y)
-            pen.Text("lat:"+str(lat)+" lon:"+str(lon), self.current_x, self.current_y)
-            pen.SetPenColor(1.0,0.0,0.0,1.0)
-            pen.SetBrushColor(0.5,0.0,0.0,1.0)
-            pen.Circle(self.current_x, self.current_y,5)
-
-        def OnMouseMotion(self,event):
-            self.current_x=event.GetX()
-            self.current_y=event.GetY()
-            self.parent.Draw(False)     # just blit layers
-            return False                # continue event propagation)
-
-        def Say(self,tof):
-            print "sample map layer received",tof
-
-    class TestFrame(wx.Frame):
-        def __init__(self, parent, id, title, size=(500, 500)):
-            wx.Frame.__init__(self, parent,id,size=(500,500),title=title,style=wx.DEFAULT_FRAME_STYLE)
-            self.Bind(wx.EVT_CLOSE, self.OnCloseFrame)
-
-            Bordeaux=(44.8404400,-0.5805000)
-            LaRochelle=(46.167,-1.167)
-
-            panel = wx.Panel(self, -1)                   # each frame needs a top level panel
-
-            self.window = WxMapBase(panel,usegl=True,localcache=os.path.dirname(os.path.abspath(__file__)))    # our WxMapWidget
-            hbox = wx.BoxSizer(wx.VERTICAL)              # a box
-            hbox.Add(self.window, 1, wx.ALIGN_CENTER|wx.ALL|wx.EXPAND, 0)
-            panel.SetSizer(hbox)
-            self.window.SetMapSrc("Open street maps")
-            test=0
-            if test==0:
-                self.window.AppendLayer(SampleMapLayer(self.window))
-            elif test==1:
-                self.window.AppendLayer(WxPathLayer(self.window))
-            elif test==2:
-                self.tools=WxToolLayer(self.window)
-                self.tools.AppendTool(WxMapButton("first",WxMapImage.FromBase64(panz64),None))
-                self.tools.AppendTool(WxMapButton("second",WxMapImage.FromBase64(panz64),None))
-                self.tools.AppendTool(WxMapButton("third",WxMapImage.FromBase64(panz64),None))
-                self.tools.SelectTool("second")
-                self.window.AppendLayer(self.tools)
-            self.Show()
-            self.window.SetSize(self.GetClientSize())   #can't get the map to show unless we force a resize
-            #self.window.SetGeoZoomAndCenter(20,(Bordeaux))
-            self.window.EncloseGeoBbox(min(Bordeaux[0],LaRochelle[0]),\
-                                        min(Bordeaux[1],LaRochelle[1]),\
-                                        max(Bordeaux[0],LaRochelle[0]),\
-                                        max(Bordeaux[1],LaRochelle[1]))
-            print self.window.GetCacheDir()
-
-        def OnCloseFrame(self, evt):
-            exit()
-
-        def OnQuit(self,event):
-            self.Close(True)
-
-    class DemoApp(wx.App):
-        def OnInit(self):
-            frame = TestFrame(None,-1,"Demo App")
-            self.SetTopWindow(frame)
-            return True
-
-    app = DemoApp(0)
-    app.MainLoop()

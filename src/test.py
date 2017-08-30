@@ -167,6 +167,7 @@ def test_mappanel():
         def __init__(self, parent, id, title, size=(500, 500)):
             wx.Frame.__init__(self, parent,id,size=(500,500),title=title,style=wx.DEFAULT_FRAME_STYLE)
             self.Bind(wx.EVT_CLOSE, self.OnCloseFrame)
+            self.Bind(wx.EVT_CHAR_HOOK, self.OnKeyPress)
 
             Bordeaux=(44.8404400,-0.5805000)
             LaRochelle=(46.167,-1.167)
@@ -204,13 +205,18 @@ def test_mappanel():
 
         def OnQuit(self,event):
             self.Close(True)
+            
+        def OnKeyPress(self,event):
+            if event.GetKeyCode() == wx.WXK_SPACE:
+                #self.window.CacheAll(10)
+                self.window.renderer.SaveBuffer(self.window.mapbuffer,os.path.dirname(os.path.abspath(__file__))+"/saved.png")
 
     class DemoApp(wx.App):
         def OnInit(self):
             frame = TestFrame(None,-1,"Demo App")
             self.SetTopWindow(frame)
             return True
-
+  
     app = DemoApp(0)
     app.MainLoop()
 
@@ -349,10 +355,13 @@ def test_timewidget():
 #to
 #import pubsub
 #
+# mappanel raises errors on invalid images, which are displayed in dialogs.
+# this redirects error logging to stderr
+wx.Log_SetActiveTarget(wx.LogStderr())
 
 #test_timewidget()
 #test_mapwidget()
-#test_mappanel()
+test_mappanel()
 #test_wxquery()
 #test_gpx()
 print "Edit this file and choose which test to start"

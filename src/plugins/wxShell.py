@@ -90,7 +90,7 @@ class WxShell(wx.Panel):
         if self.gpx!=None:
             self.pyshell.interp.locals['gpx']=self.gpx
         self.pyshell.interp.locals['mapview']=self.mapwidget
-        self.pyshell.interp.locals['timewiew']=self.timewidget
+        self.pyshell.interp.locals['timeview']=self.timewidget
         self.pyshell.interp.locals['app']=wx.GetApp().mainframe
         self.pyshell.interp.locals['sh']=self
         self.pyshell.interp.locals['rootdir']=os.path.normpath(os.path.dirname(os.path.abspath(__file__)+os.sep+".."+os.sep+".."+os.sep))
@@ -114,7 +114,7 @@ class WxShell(wx.Panel):
         self.Link()
         # self.pyshell.interp.locals={'gpx' : self.gpx,\
                                     # 'mapview':self.mapwidget,\
-                                    # 'timewiew':self.timewidget,\
+                                    # 'timeview':self.timewidget,\
                                     # 'app':wx.GetApp().mainframe,\
                                     # 'sh' :self,\
                                     # 'WxQuery':WxQuery}

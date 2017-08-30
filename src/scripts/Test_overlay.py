@@ -31,3 +31,6 @@ ovl.Add(('circle',gpx['lat'].min(),gpx['lon'].min(),250))
 #                    ))
 #ovl.clear()
 mapview.Draw(True)
+cmd=raw_input('Press enter to exit script:')
+#todo delete overlay and remove it from list
+

@@ -1,4 +1,5 @@
-
+'''
+haversine now returns a tupple(dist, course)
 def dist2pt(idx1,idx2):
     lat1, lon1 = gpx['lat'][idx1],gpx['lon'][idx1]
     lat2, lon2 = gpx['lat'][idx2],gpx['lon'][idx2]
@@ -23,3 +24,4 @@ def course2pt(idx1,idx2):
 
 sh.pyshell.interp.locals['course2pt']=course2pt
 sh.pyshell.interp.locals['dist2pt']=dist2pt
+'''
