@@ -386,7 +386,9 @@ gpx.drop_column('acceleration')
 
 * You can write all your instructions in a script then run the script using “run script…” button in shell plugin.
 
-* Any file in the scripts folder named Startup.py will be executed immediately after program starts.
+* Any file in the scripts folder named onStartup.py will be executed immediately after program starts.
+
+* The program will also execute onOpenFile.py and onSaveFile.py immediately after opening or before saving files.
 
 * In order to import functions from other scripts, you have to keep the file `__init__.py` in the scripts folder.
 

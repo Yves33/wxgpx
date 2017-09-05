@@ -9,7 +9,7 @@ import ConfigParser
 import wx
 import wx.aui
 import wx
-#wx.lib.pubsub is not correcly packed by pyinstaller. I installed a local copy
+#wx.lib.pubsub is not correcly packed by pyinstaller. a local copy is provided in modules
 if not getattr(sys,"frozen",False):
     sys.path.append(os.path.dirname(os.path.abspath(__file__) ) +"/modules/")
     from wx.lib.pubsub import setupkwargs
@@ -17,7 +17,7 @@ if not getattr(sys,"frozen",False):
 else:
     from pubsub import setupkwargs
     from pubsub import pub
-    #required imports for plugins
+    #required imports for plugins in frozen version
     import wx.lib.agw.peakmeter
     import wx.lib.agw.speedmeter
     import wx.html2
@@ -201,6 +201,8 @@ if __name__ == "__main__":
                 self.SaveFile(dialog.GetPath())
 
         def SaveFile(self,filename):
+            if 'wxShell' in self.plugins:
+                self.plugins["wxShell"].run(thispath()+os.sep+"scripts"+os.sep+"onSaveFile.py")
             if filename[-4:]=='.npz' or filename[-4:]=='.NPZ':
                 self.gpx.save_npz(filename)
             elif filename[-4:]=='.gpx' or filename[-4:]=='.GPX':
@@ -297,6 +299,10 @@ if __name__ == "__main__":
             self.gpxmenu.Enable(self.gpxmenu.FindItem("Replay"),True)
             for k in self.plugins:
                 self.plugins[k].AttachGpx(self.gpx)
+            # new
+            if 'wxShell' in self.plugins:
+                self.plugins["wxShell"].run(thispath()+os.sep+"scripts"+os.sep+"onOpenFile.py")
+
             self.SetTitle(filename)
             self.__resize()
 
@@ -374,6 +380,9 @@ if __name__ == "__main__":
                 # self.mainframe.InitPlugins()
             # else:
                 # self.mainframe.StaticPlugins()
+            # Startup plugin is now lauched from here!
+            if 'wxShell' in self.mainframe.plugins:
+                self.mainframe.plugins["wxShell"].run(thispath()+os.sep+"scripts"+os.sep+"onStartup.py")
             self.SetTopWindow(self.mainframe)
             self.blockmousemotion=False
             self.SetCallFilterEvent(True)

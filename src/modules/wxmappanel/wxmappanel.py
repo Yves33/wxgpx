@@ -96,9 +96,6 @@ def Haversine(lat1,lon1,lat2,lon2):
     course=(math.degrees(math.atan2(x,y))+360)%360
     return (dist,course)
     
-def Course(alt1,lon1,lat2,lon2):
-    return 0;
-    
 def LatLonToMeters(lat, lon ):
     mx = lon * (math.pi*6378137) / 180.0
     my = math.log( math.tan((90 + lat) * math.pi / 360.0 )) / (math.pi / 180.0)

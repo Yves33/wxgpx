@@ -25,3 +25,4 @@ def course2pt(idx1,idx2):
 sh.pyshell.interp.locals['course2pt']=course2pt
 sh.pyshell.interp.locals['dist2pt']=dist2pt
 '''
+#print "This script is executed at application startup"

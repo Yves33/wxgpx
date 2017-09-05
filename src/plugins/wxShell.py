@@ -72,9 +72,6 @@ class WxShell(wx.Panel):
 
         self.pyshell.interp.locals={}
         self.Link()
-        startupfile=os.path.normpath(self.scriptpath+os.sep+"Startup.py")
-        if os.path.isfile(startupfile):
-            self.run(startupfile)
 
     def scanscripts(self):
         if not getattr(sys,"frozen",False):
@@ -86,7 +83,6 @@ class WxShell(wx.Panel):
 
 
     def Link(self):
-
         if self.gpx!=None:
             self.pyshell.interp.locals['gpx']=self.gpx
         self.pyshell.interp.locals['mapview']=self.mapwidget
