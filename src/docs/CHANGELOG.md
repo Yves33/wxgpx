@@ -1,10 +1,11 @@
-###(September 03,2017)
+###(September 07,2017)
 * Fixed bug in wxmappanel.DrawLocalTile function (incorrect tile frame when tile image is not available)
 * Added SaveBuffer(buff,filename,imgtype) to wxGLArtist and wxDCArtist (untested)
 * Added CacheAll(maxzoom) to download all zoom levels for a given area (well... only generates a list of tiles.)
 * Changed name of Startup script to onStartup.py and moved implementation to app (so the plugin is now executed after all plugin have loaded)
 * Created onOpenFile.py and onSaveFile.py which are executed immediately after opening aand before saving a file.
 (Not tested in frozen verion. An onOpenFile.py script could for exemple convert from GMT to local time, set appropriate units...)
+* Fixed documentation, now generated through python markdown module
 
 ###(July 28,2017)
 * Set window title to reflect current file path

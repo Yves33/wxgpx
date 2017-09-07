@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['wxgpgpsport.py'],
-             pathex=['.\\modules\\', '.\\plugins\\', 'D:\\wxgpx\\src'],
+             pathex=['.\\modules\\', '.\\plugins\\', 'K:\\wxgpx\\src'],
              binaries=[],
              datas=[],
              hiddenimports=[],

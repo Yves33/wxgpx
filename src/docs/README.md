@@ -63,11 +63,11 @@ Note that the software should work even without OpenGL. However, all drawings on
 
 2.3 How do I Install it, I'm on windows and I do not have a working python 2.7 install?
 ---------------------------------------------------------------------------------------
-- Download and install Python2.7 (64 bits or 32 bits depending on your system. I use 32 bits although my system is win64). Be sure to select the option “Add python.exe to Path” Python 3.x will not work!   
+- Download and install Python2.7 (64 bits or 32 bits depending on your system. I use 32 bits although my system is win64). Be sure to select the option "Add python.exe to Path" Python 3.x will not work!   
 (64 bits) https://www.python.org/ftp/python/2.7.12/python-2.7.12.amd64.msi  
 (32 bit) https://www.python.org/ftp/python/2.7.12/python-2.7.12.msi
 
-- If you didn’t select “Add python.exe to Path” in installer, adjust system environment variables (right click on computer, advanced settings -> Environment Variables) and modify the system variable PATH (if you installed python in C:\Python27): PATH=C:\Python27\;C:\Python27\Scripts;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem
+- If you didn't select "Add python.exe to Path" in installer, adjust system environment variables (right click on computer, advanced settings -> Environment Variables) and modify the system variable PATH (if you installed python in C:\Python27):PATH=C:\Python27\;C:\Python27\Scripts;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem
 
 - Open a command window (Accessories->Command Prompt) and type:  
 `python -m pip install --upgrade pip`
@@ -94,7 +94,7 @@ Note that the software should work even without OpenGL. However, all drawings on
 - Install the downloaded packages (in that order) using the command window (Accessories->Command Prompt)  
 `pip install path/to/your/downloaded/package.whl`
 
-- You’re done. Your python environment should be about 250MB. Installation through conda/miniconda is also possible (see OSX section), but takes much more space on disk. Be careful that, if you use conda, you’ll still have to download PyOpenGL packages, as the one provided by pip do not include glut/freeglut.  
+- You're done. Your python environment should be about 250MB. Installation through conda/miniconda is also possible (see OSX section), but takes much more space on disk. Be careful that, if you use conda, you'll still have to download PyOpenGL packages, as the one provided by pip do not include glut/freeglut.  
 
 - If you downloaded the entire git repo, there will file named install_requirements.bat that will install all required packages. However, the script may fail to set the correct PATH, in which case you should refer to the beginning of this paragraph.
 
@@ -117,7 +117,7 @@ http://downloads.sourceforge.net/wxpython/wxPython3.0-osx-3.0.2.0-cocoa-py2.7.dm
 `conda clean --all`  
 `pip install PyOpenGL PyOpenGL_accelerate`  
 
-- If you do not want to install a new python environment, then the following should work (in a terminal - but I haven’t tested this method I would be happy to get some feedback)  
+- If you do not want to install a new python environment, then the following should work (in a terminal - but I haven't tested this method I would be happy to get some feedback)  
 `sudo easy_install pip`  
 `pip install dateutil numpy matplotlib lxml`  
 `pip install PyOpenGL PyOpenGL_accelerate`  
@@ -133,25 +133,26 @@ Once all required packages have been installed, extract wxGPGPSport archive.
 
 2.6 How do I run it?
 --------------------
-On windows: doubleclick launch_WIN.bat, or on wxgpgpsport.py if you python files are already associated with python executables (right click on *.py file, then select open with and browse to miniconda/python.exe or miniconda\pythonw.exe).  
+On windows: doubleclick launch_WIN.bat, or on wxgpgpsport.py if you python files are already associated with python executables (right click on \*.py file, then select open with and browse to miniconda/python.exe or miniconda\pythonw.exe).  
 On macOSX: doubleclick launch_OSX.command, or enter pythonw .gpgpsport.py in a terminal window.  
-On linux  : open a command prompt and run python gpgpsport.py, or double click glaunch_linux.sh after chmod +x ./gpgpsport.sh), or associate *.py files with correct program python. Depends on your file manager.
+On linux  : open a command prompt and run python gpgpsport.py, or double click glaunch_linux.sh after chmod +x ./gpgpsport.sh), or associate \*.py files with correct program python. Depends on your file manager.
 
 3. BRIEF MANUAL
 ===================
 
 3.1 Getting started:
 -------------------
-At startup, the software window is divided into 3 main panels:
-* The top left panel (map panel) shows a view of the earth.
-* The bottom panel (time panel) should be empty.
-* The top right panel (plugin notebook) displays a notebook where a variety of plugins can display additional data computed from current file.
-* The status bar will display information about the current point.
-* In all program, the mouse wheel is emulated with Ctrl+left click and Ctrl+right click. I found it very convenient on a laptop without mouse wheel.
+At startup, the software window is divided into 3 main panels:  
+
+* The top left panel (map panel) shows a view of the earth.  
+* The bottom panel (time panel) should be empty.  
+* The top right panel (plugin notebook) displays a notebook where a variety of plugins can display additional data computed from current file.  
+* The status bar will display information about the current point.  
+* In all program, the mouse wheel is emulated with Ctrl+left click and Ctrl+right click. I found it very convenient on a laptop without mouse wheel.  
 
 3.2 Opening a file: 
 ------------------
-* Using the menu (File->Open), you’ll get a file selection dialog box where you can browse to the file you want to open.
+* Using the menu (File->Open), you'll get a file selection dialog box where you can browse to the file you want to open.
 * The program can read gpx files v1.0 (\*.gpx), compressed gpx files (\*.gpz, gpx.gz) and Garmin fit files (\*.fit). Be sure to select the right type of file in the file selector filter combo box.
 * If no information is found concerning speed in the file, the speed is calculated according to GPS positions and time. Some other information (such as slope, course,…) are calculated by the software and everything is stored in a table (to learn more about this table, see plugins section, table and shell).
 
@@ -164,17 +165,18 @@ At startup, the software window is divided into 3 main panels:
 * You can right click on the map and choose an alternate map tile provider (some of them may not be working). The default provider is open street maps. It is possible to load tiles from google satellite, but you have to know that accessing these tiles outside the dedicated google api is illegal!
 * You can use F10, F11 and F5 to zoom in, zoom out and refresh the current view (that is force the software to re-download map images)
 * When you move the mouse, an indicator (green arrowhead by default) will indicate the current point (trace point closest to mouse pointer). The position of the cursor is updated in time panel (see below).
-* You can customize the information displayed on map by double clicking on the map. A dialog will appear with several options:  
-** key for color code: the value that will be used to calculate false colors for track representation. False colors vary from blue (for minimum) to red (for maximum). If you do not want false colors, then select none in the drop down combo box. At the present time, the palette cannot be modified without using custom scripts (see the script 'palette')  
-** line width: the width of line used to display gps track and current indicator. Default is 2.  
-** custom color: the color used to draw track if 'use custom color' is selected as the key for false colors.  
-** indicator style: you can choose between dot, arrowhead, vector from and vector to current point. If you choose arrowhead or vector, you'll need to specify a key for the direction (arrowhead/vector) and a key for vector length (vector only).  
-** custom color: the color to use to draw indicator.  
-** key for angle and key for magnitude: the values used to determine arrowhead/vector orientation and vector magnitude.  
-** zoom factor: used to adjust vector length on map.  
-** draw label check box: whether to draw or not a label nearby to current point.  
-** key fro label: the value to be used for label.  
-** label position: an x,y couple indicating the relative position of the label.  
+* You can customize the information displayed on map by double clicking on the map. A dialog will appear with several options: 
+ 
+    + key for color code: the value that will be used to calculate false colors for track representation. False colors vary from blue (for minimum) to red (for maximum). If you do not want false colors, then select none in the drop down combo box. At the present time, the palette cannot be modified without using custom scripts (see the script 'palette')  
+    + line width: the width of line used to display gps track and current indicator. Default is 2.  
+    + custom color: the color used to draw track if 'use custom color' is selected as the key for false colors.  
+    + indicator style: you can choose between dot, arrowhead, vector from and vector to current point. If you choose arrowhead or vector, you'll need to specify a key for the direction (arrowhead/vector) and a key for vector length (vector only).  
+    + custom color: the color to use to draw indicator.  
+    + key for angle and key for magnitude: the values used to determine arrowhead/vector orientation and vector magnitude.  
+    + zoom factor: used to adjust vector length on map.  
+    + draw label check box: whether to draw or not a label nearby to current point.  
+    + key fro label: the value to be used for label.  
+    + label position: an x,y couple indicating the relative position of the label.  
 
 3.4 Using the time panel:
 ------------------------
@@ -275,113 +277,113 @@ When you click on analyse button, the software will ask you the list of waypoint
 -----------------
 * The shell plugin is simply a python shell that gives you access to the internals of the program. Using the shell plugin, you can manipulate your gps track as you want.
 * The table holding all datas is a numpy ndarray that can be accessed through the gpx variable.
-All methods from the gpx objects are available, however, in most cases, you’ll only use the following ones:
+All methods from the gpx objects are available, however, in most cases, you'll only use the following ones:
 ```python
-def append_column(self,key,typ):
-def drop_column(self,key):
-def move_column(self, oldkey, newkey):
-def append_row(self, values):
-def drop_row(self,rownum):
-def get_last_row_idx(self):
-def get_last_col_idx(self):
-def get_headers(self):
-def get_header_names(self):
-def get_header_types(self):
-def has_field(self,field):
-def get_col_count(self):
-def get_row_count(self):
-def set_unit(self,key,value):
-def get_unit(self,key):
-def get_unit_sym(self,key):
-def get_unit_desc(self,key):
-def get_scale(self,key):
-def set_scale(self, key, value):
-def hv_distance(self):
-def hv_course(self):
-def hv_speed(self,skipnan=True):
-def slope(self,conv=10,skipnan=False):
-def hv_nearest(self, lat, lon):
-def duration(self):
-def hv_pace(self,dist,ahead=False):
-def sort_asc(self,key):
-def sort_desc(self,key):
-def get_top_n(self,key,n):
-def ok(self):
-def discard(self):
-def nanmean(self,a):
+def append_column(self,key,typ):  
+def drop_column(self,key):  
+def move_column(self, oldkey, newkey):  
+def append_row(self, values):  
+def drop_row(self,rownum):  
+def get_last_row_idx(self):  
+def get_last_col_idx(self):  
+def get_headers(self):  
+def get_header_names(self):  
+def get_header_types(self):  
+def has_field(self,field):  
+def get_col_count(self):  
+def get_row_count(self):  
+def set_unit(self,key,value):  
+def get_unit(self,key):  
+def get_unit_sym(self,key):  
+def get_unit_desc(self,key):  
+def get_scale(self,key):  
+def set_scale(self, key, value):  
+def hv_distance(self):  
+def hv_course(self):  
+def hv_speed(self,skipnan=True):  
+def slope(self,conv=10,skipnan=False):  
+def hv_nearest(self, lat, lon):  
+def duration(self):  
+def hv_pace(self,dist,ahead=False):  
+def sort_asc(self,key):  
+def sort_desc(self,key):  
+def get_top_n(self,key,n):  
+def ok(self):  
+def discard(self):  
+def nanmean(self,a):  
 ```
 
 - you can easily access the individual table columns using the following syntax:
 
 ```python
-gpx['key']      # or, for a given cell gpx['key'][rowidx]
-gpx['lat'][0]   # gives the latitude of the first point in file
-gpx['lat'][10]  # gives the latitude of the 10th point in file
-gpx['lat']      # returns an array holding all latitudes
+gpx['key']      # or, for a given cell gpx['key'][rowidx]  
+gpx['lat'][0]   # gives the latitude of the first point in file  
+gpx['lat'][10]  # gives the latitude of the 10th point in file  
+gpx['lat']      # returns an array holding all latitudes  
 ```
 
 - The data are returned in SI units (remember that wxGPGPSPort only works in SI units, then converts to user defined units).  There is a workaround to access scaled values, which is to index you array with a tupple (key, scaled):
 ```python
-gpx[('speed',1)] # returns speed in user defined units
-gpx[('speed',0)] # returns speed in SI units
+gpx[('speed',1)] # returns speed in user defined units  
+gpx[('speed',0)] # returns speed in SI units  
 ```
 
 - You can also filter out disabled values using a 3 element tupple (key, scaled, enabled)
 ```python
-# both formulations are equivalent
-# return speed of all enabled points in user units
-gpx[('speed',1,1)]
-gpx['speed'][np.where(gpx['ok']==1)]*gpx.get_scale('speed')
+# both formulations are equivalent  
+# return speed of all enabled points in user units  
+gpx[('speed',1,1)]  
+gpx['speed'][np.where(gpx['ok']==1)]*gpx.get_scale('speed')  
 ```
 
 _Sounds complicate!!_ So here are a few exemples:
 - Calculate maximum seed in SI units:
 ```python
-print "vmax: ", gpx['speed'].max(),"m/s"
+print "vmax: ", gpx['speed'].max(),"m/s"  
 ```
 
 - Calculate average speed in user units:
 ```python
-print "average speed: ",                \
-gpx['speed'].mean()*gpx.get_scale('speed'), \
+print "average speed: ",                \  
+gpx['speed'].mean()*gpx.get_scale('speed'), \  
 gpx.get_unit_sym('speed')
 ```
 or, using tupple indexing:
 ```python
-print "average speed: ",gpx[('speed',1)].mean(),gpx.get_unit_sym('speed')
+print "average speed: ",gpx[('speed',1)].mean(),gpx.get_unit_sym('speed')  
 ```
 
 - Calculate the average speed for points above 3m/s:
 ```python
-indices = np.where(gpx['speed']>3)
-print "average above 3m/s: ", gpx['speed'][indices].mean()
+indices = np.where(gpx['speed']>3)  
+print "average above 3m/s: ", gpx['speed'][indices].mean()  
 ```
 
 or, skipping the intermediate array:
 ```python
-print "avg above 3m/s: ", gpx['speed'][np.where(gpx['speed']>3)].mean()
+print "avg above 3m/s: ", gpx['speed'][np.where(gpx['speed']>3)].mean()  
 ```
 
 - Calculate the average speed for points below 3kts using tuple indexing:
 ```python
-gpx.set_unit('speed', 'kts')
-print "avg below 3kts: ",gpx[('speed',1)][np.where(gpx[('speed',1)]<3)].mean()
+gpx.set_unit('speed', 'kts')  
+print "avg below 3kts: ",gpx[('speed',1)][np.where(gpx[('speed',1)]<3)].mean()  
 ```
 
 - Selecting only points where speed is above 10km/h:
 ```python
-gpx.set_unit('speed', 'km/h')
-gpx['ok'][np.where(gpx[('speed',1)]<10)]=False
-sh.upd()    # send update signal to all panels and plugins
+gpx.set_unit('speed', 'km/h')  
+gpx['ok'][np.where(gpx[('speed',1)]<10)]=False  
+sh.upd()    # send update signal to all panels and plugins  
 ```
 
 * Creating and deleting new columns:
 You can create an extra column in the table and manipulate its values by providing a name and the type of data (floating point numbers, in most cases), then rename or delete the column.
 ```python
-gpx.append_column('accel', 'float')
-gpx['accel']=np.ediff1d(gpx['speed'],0)/gpx['deltat']
-gpx.move_column('accel', 'acceleration')
-gpx.drop_column('acceleration')
+gpx.append_column('accel', 'float')  
+gpx['accel']=np.ediff1d(gpx['speed'],0)/gpx['deltat']  
+gpx.move_column('accel', 'acceleration')  
+gpx.drop_column('acceleration')  
 ```
 
 * You can write all your instructions in a script then run the script using “run script…” button in shell plugin.
@@ -399,7 +401,7 @@ gpx.drop_column('acceleration')
 gpx         # the array holding all values, with associated methods.
 mapview     # the map object. All methods from WxMapWidget are available|
 timeview    # the time object. All methods from WxTimeWidget are available
-app         # the application itself. All methods from wx.Panel are available, but you’ll mainly use app.OpenFile(filename) and app.SaveFile(filename)
+app         # the application itself. All methods from wx.Panel are available, but you'll mainly use app.OpenFile(filename) and app.SaveFile(filename)
 sh          # the shell by itself. Usefull commands may include sh.clear() to clear the shell, sh.run(filename) to run an external python file, sh.copy(text) to put text in the clipboard, and sh.upd() to force an update of map, time and plugin panels
 WxQuery     # access to simple gui    (see the moule WxQuery in modules folder)
 ```
@@ -439,7 +441,7 @@ power           # power
 temp            # temperature
 distance        # distance may be overridden by internal distance calculation
 ```
-if elevation (‘ele’) data is found, the soft will calculate ‘slope’ value (inaccurate)
+if elevation ('ele') data is found, the soft will calculate 'slope' value (inaccurate)
 Some other variables are created by some scripts, such as:
 ```python
 wind_dir            # wind direction, in degrees (North=0)
@@ -455,7 +457,7 @@ tack                # port and starboard tack (one is 1.0, the other -1.0)
 4.11 Exemple scripts:
 ---------------------
 
-I’ve tried to provide some scripts examples. Some are heavily commented, some other are not!
+I've tried to provide some scripts examples. Some are heavily commented, some other are not!
 
 - Average_above_speed  
 A very simple script showing how to use wxQuery to display a simple Graphical user interface and output some results to shell window.
@@ -467,7 +469,7 @@ A More complex example that display complete statistics about windsurf session. 
 A very simple script showing how to use wxQuery to alter the time of gpx points in current file.
 
 - Winds_up_import  
-This script is able to import the wind speed and direction from a “saved” html file. To use it, you must first go to winds-up site, then reach the statistics page for the date and spot where your gps file was recorded (for instance http://www.winds-up.com/spot-hourtin-lac-windsurf-kitesurf-25-observations-releves-vent.html?date=2017-01-13 ).  
+This script is able to import the wind speed and direction from a "saved" html file. To use it, you must first go to winds-up site, then reach the statistics page for the date and spot where your gps file was recorded (for instance http://www.winds-up.com/spot-hourtin-lac-windsurf-kitesurf-25-observations-releves-vent.html?date=2017-01-13 ).  
 The script will automatically parse the file and generate four columns in current file:  
 ```python
 wind_avg     # average wind speed  
@@ -476,8 +478,8 @@ wind_maxi    # maximal wind speed
 wind_dir     # wind direction, in degrees, that is the direction the wind is pointing to north=0. South winds points towards the North
 ```
 
-- Wind
-A very simple plugin to enter the values of speed when you can’t or don’t want to download from winds-up. 
+- Wind  
+A very simple plugin to enter the values of speed when you can't or don't want to download from winds-up. 
 The script will generate four columns in table, as  Winds-up_import.py
 ```python
 wind_avg      # average wind speed  
@@ -490,10 +492,10 @@ wind_dir      # wind direction, in degrees, that is the direction the wind is po
 The palette script is a proof of concept. It shows you how to monkey patch (https://en.wikipedia.org/wiki/Monkey_patch) the software to use matplotlib palettes to display the gps track.
 
 - Batch_process_template
-As indicated, it is a template showing how to batch process files. You’ll have to modify it so that it fits your needs.
+As indicated, it is a template showing how to batch process files. You'll have to modify it so that it fits your needs.
 
 - Apparent_wind_VMG
-Very buggy for now… The script calculates apprent wind (but not VMG for now). There is a bug which causes the apparent wind to be oriented 180° during the jibe.
+Very buggy for now. The script calculates apprent wind (but not VMG for now). There is a bug which causes the apparent wind to be oriented 180 degrees during the jibe.
 
 - Jibe_analysis
 Still unstable. performs some basic statistics about jibe. You need to geive wind direction in degrees and the number of points for smoothing (convolution).
@@ -519,37 +521,14 @@ Shows you how to create an overlay layer on the map and draw directly to overlay
 
  5. ABOUT THIS DOCUMENT
 =======================
-This document is written in markdown and converted to html using stackedit (https://stackedit.io/editor#411)
- and escape html entities(http://www.htmlescape.net/htmlescape_tool.html).
+This document is written in markdown and converted to html using python markdown module 
+```python
+python -m markdown -x markdown.extensions.codehilite -x markdown.extensions.toc -x markdown.extensions.fenced_code README.md>README.html
+```
 
- 6. TODO LIST
+ 6. NOTES
 =============
 
-6.1 Main program
-----------------
-* CSV/TSV import with time format string.  
-import heartrate and other info from other captors.  
-timeshift should be possible to precisely adjust datas.
-* TCX file import.  
-* List of plugins that should not be loaded (through \*.ini file).  
-* On demand plugin loading and unloading.  
-* GPX1.1 import.  
-* Panel or entire frame screenshot (accessible by script) (app->plugin("name")->Screenshot(path))
-(already implemented in wxGauge.py and wxSpeedmeter.py)
-
-6.2 Scripts
------------
-* Correction of elevation data using google elevation api.  
-https://maps.googleapis.com/maps/api/elevation/json?locations=lat1,lon1|lat2,lon2|lat3|lon3  
-* Automatic wind direction calculation - abandonned feature. An estimation can be done using
-`np.mod(gpx[('course',1,1)],180).mean()+90`
-* Jibe/tack analysis, with Vmax, Vmin, jibe duration (time before we recover a given speed), jibe curve diameter (still buggy)
-* Apparent wind and VMG (still buggy)
-* \*.srt (subtitle rip) export for use with sport camera. Synchronisation required
-* \*.usf (universal subtitle format) export *with* pictures for use with sport camera.
-
-6.3 Plugins
------------
 The code to load working can also work in the frozen version (provided you copy the plugins folder to frozen app root folder).
 In order to get the plugins to work, the following extra modules are imported by pyinstaller.
 ```python
@@ -560,4 +539,4 @@ from wx.py import shell
 import  wx.grid as  wxgrid
 ```
 
-If you want to develop plugins that need to import extra python modules, you'll have to install a full python environment (in any case, installing a full environnement is better to develop plugins and scriots.
+If you want to develop plugins that need to import extra python modules, you'll have to install a full python environment (in any case, installing a full environnement is better to develop plugins and scripts).
